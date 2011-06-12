@@ -10,18 +10,19 @@
 
 (defn query
   [params]
-  (merge {:headers {"content-type" "application/json"}
-          :auto-transform true}
-         params))
+  (assoc params
+    :headers {"content-type" "application/json"}
+    :auto-transform true))
 
 (defn request
-  [params & [async]]
+  [params async]
   (apply (if async http-request sync-http-request)
          [(query params)]))
 
 (defn add-doc
-  [{:keys [server index type doc id query-string async debug]}]
-  (let [params {:method :post
+  [server index type doc & opts]
+  (let [{:keys [id query-string async debug]} (apply array-map opts)
+        params {:method :post
                 :url (apply url (if id
                                   [server index type id]
                                   [server index type]))
@@ -30,22 +31,25 @@
     (request params async)))
 
 (defn get-doc
-  [{:keys [server index type doc id  query-string async debug]}]
-  (let [params {:method :get
+  [server index type id & opts]
+  (let [{:keys [query-string async debug]} (apply array-map opts)
+        params {:method :get
                 :url (url server index type id)
                 :query-string query-string}]
     (request params async)))
 
 (defn delete-doc
-  [{:keys [server index type doc id  query-string async debug]}]
-  (let [params {:method :delete
+  [server index type id & opts]
+  (let [{:keys [query-string async debug]} (apply array-map opts)
+        params {:method :delete
                 :url (url server index type id)
                 :query-string query-string}]
     (request params async)))
 
 (defn search-doc
-  [{:keys [server index type search-query query-string async debug]}]
-  (let [params {:method :get
+  [server index type search-query & opts]
+  (let [{:keys [query-string async debug]} (apply array-map opts)
+        params {:method :get
                 :url (url server index "_search")
                 :query-string query-string
                 :body (closed-channel search-query)}]

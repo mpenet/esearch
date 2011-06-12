@@ -9,7 +9,7 @@
 (defn url
   "Build urls by joining params with /
    Treats vector args as multi params separated by ,
-   and :all as _all"
+   :all as _all"
   [& parts]
   (str-join (->> parts
                  (remove nil?)
@@ -30,8 +30,7 @@
 (defn request
   "Forwards the ring requests settings to the appropriate request client"
   [params async]
-  (apply (if async http-request sync-http-request)
-         [(query params)]))
+  ((if async http-request sync-http-request) (query params)))
 
 (defn add-doc
   [server index type doc & {:keys [id query-string async]}]

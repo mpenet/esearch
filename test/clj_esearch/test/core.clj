@@ -1,9 +1,6 @@
 (ns clj-esearch.test.core
   (:use [clj-esearch.core]
-        [lamina.core :only [enqueue enqueue-and-close named-channel
-                            receive run-pipeline wait-for-result
-                            read-channel]]
-        [aleph.formats :only [byte-buffer->string]]
+        [lamina.core :only [wait-for-result]]
         [clojure.test]))
 
 (def test-server "http://127.0.0.1:9200")
@@ -58,7 +55,6 @@
     (is (= 200 (:status response)))
     (is (= 2 (-> response :body :hits :hits count)))))
 
-
 (deftest search-async-test
   (let [doc (add-doc test-server
                      test-index
@@ -74,4 +70,7 @@
     (is (= 1 (-> response :body :hits :hits count)))))
 
 (deftest percolate-test
-  (is (= 200 (:status (percolate test-server test-index "perc-test" {:query {:term {:field1 "value1" }}})))))
+  (is (= 200 (:status (percolate test-server
+                                 test-index
+                                 "perc-test"
+                                 {:query {:term {:field1 "value1" }}})))))

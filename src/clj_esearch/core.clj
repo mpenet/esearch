@@ -91,7 +91,7 @@
   (request {:method :put
             :url (url server "_bulk")
             :query-string query-string
-            :body (str-join (map #(json-str %) item-coll) "\n")}
+            :body (closed-channel (str-join (map #(json-str %) item-coll) "\n"))}
            async))
 
 

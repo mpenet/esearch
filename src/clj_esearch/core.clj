@@ -35,9 +35,7 @@
 (defn add-doc
   [server index type doc & {:keys [id query-string async]}]
   (request {:method :post
-            :url (apply url (if id
-                              [server index type id]
-                              [server index type]))
+            :url (url server index type id)
             :query-string query-string
             :body (closed-channel doc)}
            async))

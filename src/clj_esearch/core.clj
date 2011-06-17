@@ -1,4 +1,5 @@
 (ns clj-esearch.core
+  "Elastic-search HTTP client"
   (:use [aleph.http :only [sync-http-request http-request]]
         [lamina.core :only [closed-channel]]
         [clojure.contrib.json :only [json-str]]))
@@ -91,7 +92,7 @@
   (request {:method :put
             :url (url server "_bulk")
             :query-string query-string
-            :body (closed-channel (str-join (map #(json-str %) item-coll) "\n"))}
+            :body (closed-channel (str-join (map json-str item-coll) "\n"))}
            async))
 
 

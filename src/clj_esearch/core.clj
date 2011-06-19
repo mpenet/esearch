@@ -38,7 +38,7 @@
   (request {:method :post
             :url (url server index type id)
             :query-string query-string
-            :body (closed-channel doc)}
+            :body doc}
            async))
 
 (defn get-doc
@@ -60,7 +60,7 @@
   (request {:method :delete
             :url (url server index type "_query")
             :query-string query-string
-            :body (closed-channel delete-query)}
+            :body delete-query}
            async))
 
 (defn search-doc
@@ -68,7 +68,7 @@
   (request {:method :get
             :url (url server index type  "_search")
             :query-string query-string
-            :body (closed-channel search-query)}
+            :body search-query}
            async))
 
 (defn percolate
@@ -76,7 +76,7 @@
   (request {:method :put
             :url (url server "_percolator" index name)
             :query-string query-string
-            :body (closed-channel percolator-query)}
+            :body percolator-query}
            async))
 
 (defn count-docs
@@ -84,7 +84,7 @@
   (request {:method :get
             :url (url server index type  "_count")
             :query-string query-string
-            :body (closed-channel count-query)}
+            :body count-query}
            async))
 
 (defn bulk
@@ -92,7 +92,7 @@
   (request {:method :put
             :url (url server "_bulk")
             :query-string query-string
-            :body (closed-channel (str-join (map json-str item-coll) "\n"))}
+            :body (str-join (map json-str item-coll) "\n")}
            async))
 
 

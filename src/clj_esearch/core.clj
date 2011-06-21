@@ -23,10 +23,9 @@
 
 (defn query
   [params]
-  (assoc params
-    :headers {"content-type" "application/json"}
-;    :keep-alive? true
-    :auto-transform true))
+  (merge
+   {:headers {"content-type" "application/json"}
+    :auto-transform true} params))
 
 (defn request
   "Forwards the ring requests settings to the appropriate request client"
@@ -88,11 +87,13 @@
            async))
 
 (defn bulk
-  [server item-coll & {:keys [query-string async]}]
+  [server bulk-lines & {:keys [query-string async]}]
   (request {:method :put
             :url (url server "_bulk")
             :query-string query-string
-            :body (str-join (map json-str item-coll) "\n")}
+            :headers {"content-type" "text/plain"}
+            :autotransform false
+            :body (apply str (map #(str (json-str %) "\n") bulk-lines))}
            async))
 
 

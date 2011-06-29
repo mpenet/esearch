@@ -29,16 +29,32 @@
     :keep-alive false}
    params))
 
+(defn byte-buffer->data
+  "Takes a byte-buffer sequence and reads json data from it"
+  [byte-buffer-seq]
+  (->> byte-buffer-seq
+       (apply concat-byte-buffers)
+       byte-buffer->string
+       read-json))
+
+(defprotocol PBodyDecoder
+  "Response body decoding"
+  (decode [body]))
+
+(extend-protocol PBodyDecoder
+  clojure.lang.ArraySeq
+  (decode [body]
+    (byte-buffer->data body))
+  lamina.core.channel.Channel
+  (decode [body]
+    (->> body
+         lazy-channel-seq
+         (map first)
+         byte-buffer->data)))
+
 (defn chunked-json-response->hash-map
   [response]
-  (let [response-body (:body response)]
-    (assoc response
-      :body (->> (if (= (type response-body) clojure.lang.ArraySeq)
-                   response-body
-                   (map first (lazy-channel-seq response-body)))
-                 (apply concat-byte-buffers)
-                 byte-buffer->string
-                 read-json))))
+  (assoc response :body (-> response :body decode)))
 
 (defn request
   "Forwards the ring requests settings to the appropriate request client"

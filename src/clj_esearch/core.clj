@@ -1,8 +1,9 @@
 (ns clj-esearch.core
   "Elastic-search HTTP client"
   (:use [aleph.http :only [sync-http-request http-request]]
-        [lamina.core :only [closed-channel]]
-        [clojure.contrib.json :only [json-str]]))
+        [aleph.formats :only [byte-buffer->string concat-byte-buffers]]
+        [lamina.core :only [lazy-channel-seq]]
+        [clojure.contrib.json :only [json-str read-json]]))
 
 (defn str-join [value separator]
   (apply str (interpose separator value)))
@@ -25,19 +26,36 @@
   [params]
   (merge
    {:headers {"content-type" "application/json"}
-    :auto-transform true} params))
+    :keep-alive false}
+   params))
+
+(defn chunked-json-response->hash-map
+  [response]
+  (let [response-body (:body response)]
+    (assoc response
+      :body (->> (if (= (type response-body) clojure.lang.ArraySeq)
+                   response-body
+                   (map first (lazy-channel-seq response-body)))
+                 (apply concat-byte-buffers)
+                 byte-buffer->string
+                 read-json))))
 
 (defn request
   "Forwards the ring requests settings to the appropriate request client"
   [params async]
-  ((if async http-request sync-http-request) (query params)))
+  (let [query-params (query params)]
+    (if async
+      (http-request query-params)
+      (-> query-params
+          sync-http-request
+          chunked-json-response->hash-map))))
 
 (defn add-doc
   [server index type doc & {:keys [id query-string async]}]
   (request {:method :post
             :url (url server index type id)
             :query-string query-string
-            :body doc}
+            :body (json-str doc)}
            async))
 
 (defn get-doc
@@ -59,7 +77,7 @@
   (request {:method :delete
             :url (url server index type "_query")
             :query-string query-string
-            :body delete-query}
+            :body (json-str delete-query)}
            async))
 
 (defn search-doc
@@ -67,7 +85,7 @@
   (request {:method :get
             :url (url server index type  "_search")
             :query-string query-string
-            :body search-query}
+            :body (json-str search-query)}
            async))
 
 (defn percolate
@@ -75,7 +93,7 @@
   (request {:method :put
             :url (url server "_percolator" index name)
             :query-string query-string
-            :body percolator-query}
+            :body (json-str percolator-query)}
            async))
 
 (defn count-docs
@@ -83,7 +101,7 @@
   (request {:method :get
             :url (url server index type  "_count")
             :query-string query-string
-            :body count-query}
+            :body (json-str count-query)}
            async))
 
 (defn bulk

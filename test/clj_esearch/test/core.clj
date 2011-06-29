@@ -4,8 +4,8 @@
         [clojure.test]))
 
 (def test-server "http://127.0.0.1:9200")
-(def test-index "test-index")
-(def test-type "test-type")
+(def test-index "titems")
+(def test-type "titem")
 
 (defrecord Doc [title posted content])
 (def test-doc (Doc. "foo" 12345 "bar"))
@@ -66,11 +66,12 @@
            test-type
            test-doc)
   (Thread/sleep 1000)
-  (let [response (wait-for-result (search-doc test-server
-                                              {:query {:term {:content "bar"}}}
-                                              :index test-index
-                                              :type test-type
-                                              :async true))]
+  (let [response (chunked-json-response->hash-map
+                  (wait-for-result (search-doc test-server
+                                               {:query {:term {:content "bar"}}}
+                                               :index test-index
+                                               :type test-type
+                                               :async true)))]
     (is (= 200 (:status response)))
     (is (= 1 (-> response :body :hits :hits count)))))
 
@@ -79,3 +80,4 @@
                                  test-index
                                  "perc-test"
                                  {:query {:term {:field1 "value1" }}})))))
+

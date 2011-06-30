@@ -10,15 +10,14 @@
 
 (defn url
   "Build urls by joining params with /
-   Treats vector args as multi params separated by ,
-   :all as _all"
+   Treats vector args as multi params separated by ,"
   [& parts]
   (str-join (->> parts
                  (remove nil?)
                  (map #(cond (sequential? %)
                              (str-join % ",")
-                             (= :all %)
-                             "_all"
+                             (keyword? %)
+                             (name %)
                              :else %)))
             "/"))
 

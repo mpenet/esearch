@@ -21,9 +21,11 @@
 
 (deftest url-generation-test
   (is (= "http://127.0.0.1:9200/a/b/c") (url test-server "a" "b" "c"))
+  (is (= "http://127.0.0.1:9200/a/b/c") (url test-server "a" :b  :c))
   (is (= "http://127.0.0.1:9200/a/b,c") (url test-server "a" ["b" "c"]))
+  (is (= "http://127.0.0.1:9200/a/b,c") (url test-server "a" [:b :c]))
   (is (= "http://127.0.0.1:9200/a,b/c") (url test-server ["a" "b"] "c"))
-  (is (= "http://127.0.0.1:9200/_all/b/c") (url test-server :all "b" "c")))
+  (is (= "http://127.0.0.1:9200/_all/b/c") (url test-server :_all "b" "c")))
 
 (deftest add-doc-test
   (let [response (add-doc test-server test-index test-type test-doc)]
@@ -56,7 +58,7 @@
   (Thread/sleep 1000)
   (let [response (search-doc test-server
                              {:query {:term {:title "foo"}}}
-                             :index :all)]
+                             :index :_all)]
     (is (= 200 (:status response)))
     (is (= 3 (-> response :body :hits :hits count)))))
 

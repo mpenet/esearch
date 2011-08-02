@@ -8,7 +8,8 @@
 (def test-type "titem")
 
 (defrecord Doc [title posted content])
-(def test-doc (Doc. "foo" 12345 "bar"))
+(def test-doc (Doc. "foo" 12345 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
+
 
 (use-fixtures :each (fn [atest]
                       (request {:method :delete
@@ -29,7 +30,7 @@
 
 (deftest add-doc-test
   (let [response (add-doc test-server test-index test-type test-doc)]
-  (is (= 201 (:status response)))))
+    (is (= 201 (:status response)))))
 
 (deftest get-doc-test
   (add-doc test-server
@@ -47,7 +48,7 @@
                      test-type
                      test-doc
                      :id 3)]
-      (is (=  200 (:status (delete-doc test-server test-index test-type 3))))))
+    (is (=  200 (:status (delete-doc test-server test-index test-type 3))))))
 
 (deftest search-doc-test
   (dotimes [i 3]
@@ -68,12 +69,12 @@
            test-type
            test-doc)
   (Thread/sleep 1000)
-  (let [response (chunked-json-response->hash-map
-                  (wait-for-result (search-doc test-server
-                                               {:query {:term {:content "bar"}}}
-                                               :index test-index
-                                               :type test-type
-                                               :async true)))]
+  (let [response
+        (wait-for-result (search-doc test-server
+                                     {:query {:term {:content "lorem"}}}
+                                     :index test-index
+                                     :type test-type
+                                     :async true))]
     (is (= 200 (:status response)))
     (is (= 1 (-> response :body :hits :hits count)))))
 
@@ -82,4 +83,9 @@
                                  test-index
                                  "perc-test"
                                  {:query {:term {:field1 "value1" }}})))))
+
+(deftest bulk-test
+  (is (= 200 (:status (bulk test-server
+                            [{:index {:_index "test-index" :_type "test-type" :_id "foo"}}
+                             {:foo "bar" :lorem "ipsum"}])))))
 

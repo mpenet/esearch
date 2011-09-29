@@ -17,7 +17,7 @@ See tests
 clj-esearch is available as a Maven artifact from [Clojars](http://clojars.org/clj-esearch):
 
     :dependencies
-      [[clj-esearch "0.0.1"] ...]
+      [[clj-esearch "0.1.0"] ...]
 
 ## License
 

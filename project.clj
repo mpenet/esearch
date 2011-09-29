@@ -1,6 +1,6 @@
 (defproject clj-esearch "0.0.1"
 
-  :description "FIXME: write description"
+  :description "Elastic Search REST client for Clojure"
 
   :repositories { "sonatype.org" "http://oss.sonatype.org/content/repositories/releases/" }
 

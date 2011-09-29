@@ -1,4 +1,4 @@
-(defproject clj-esearch "0.0.1"
+(defproject clj-esearch "0.1.0"
 
   :description "Elastic Search REST client for Clojure"
 

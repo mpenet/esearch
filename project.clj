@@ -4,8 +4,8 @@
 
   :repositories { "sonatype.org" "http://oss.sonatype.org/content/repositories/releases/" }
 
-  :dependencies [[org.clojure/clojure "1.2.0"]
-                 [aleph "0.2.0-beta2"]]
+  :dependencies [[org.clojure/clojure "1.2.1"]
+                 [aleph "0.2.0-rc2"]]
 
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT" :exclusions
                       [org.clojure/clojure org.clojure/clojure-contrib]]

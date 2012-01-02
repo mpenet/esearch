@@ -1,7 +1,7 @@
 (ns clj-esearch.core
   "Elastic-search HTTP client"
-  (:use [aleph.http :only [sync-http-request http-request]]
-        [clojure.contrib.json :only [json-str read-json]]))
+  (:use [aleph.http :only [sync-http-request http-request]])
+  (:require [cheshire.core :as json]))
 
 (defn str-join [value separator]
   (apply str (interpose separator value)))
@@ -40,7 +40,7 @@
   (request {:method :post
             :url (url server index type id)
             :query-string query-string
-            :body (json-str doc)}
+            :body (json/generate-string doc)}
            async))
 
 (defn get-doc
@@ -62,7 +62,7 @@
   (request {:method :delete
             :url (url server index type "_query")
             :query-string query-string
-            :body (json-str delete-query)}
+            :body (json/generate-string delete-query)}
            async))
 
 (defn search-doc
@@ -70,7 +70,7 @@
   (request {:method :get
             :url (url server index type  "_search")
             :query-string query-string
-            :body (json-str search-query)}
+            :body (json/generate-string search-query)}
            async))
 
 (defn percolate
@@ -78,7 +78,7 @@
   (request {:method :put
             :url (url server "_percolator" index name)
             :query-string query-string
-            :body (json-str percolator-query)}
+            :body (json/generate-string percolator-query)}
            async))
 
 (defn count-docs
@@ -86,7 +86,7 @@
   (request {:method :get
             :url (url server index type  "_count")
             :query-string query-string
-            :body (json-str count-query)}
+            :body (json/generate-string count-query)}
            async))
 
 (defn bulk
@@ -97,8 +97,6 @@
             :auto-transform false
             :headers {"content-type" "text/plain"}
             :body (->> bulk-lines
-                       (map #(str (json-str %) "\n"))
+                       (map #(str (json/generate-string %) "\n"))
                        (apply str))}
            async))
-
-

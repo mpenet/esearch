@@ -1,19 +1,22 @@
 # clj-esearch
 
-Clojure client for elastic search
+Clojure REST client for [Elastic Search](http://www.elasticsearch.org/)
 
-Uses Aleph HTTP client under the hood, allowing async/sync requests
+Uses [Aleph](https://github.com/ztellman/aleph) HTTP client under the hood,
+allowing async/sync requests.
+
+[Elastic Search Query DSL ref](http://www.elasticsearch.org/guide/reference/query-dsl/)
 
 ## Usage
 
-See tests
+See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/test/core.clj)
 
 ## Installation
 
 clj-esearch is available as a Maven artifact from [Clojars](http://clojars.org/clj-esearch):
 
     :dependencies
-      [[clj-esearch "0.3.0"] ...]
+      [[clj-esearch "0.3.1"] ...]
 
 ## License
 

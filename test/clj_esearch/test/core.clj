@@ -12,12 +12,12 @@
 
 
 (use-fixtures :each (fn [atest]
-                      (request {:method :delete
-                                :url (url test-server test-index test-type)} nil)
-                      (request {:method :post
-                                :url (url test-server test-index "_flush")} nil)
-                      (request {:method :post
-                                :url (url test-server "_cache" "clear")} nil)
+                      @(request {:method :delete
+                                 :url (url test-server test-index test-type)})
+                      @(request {:method :post
+                                 :url (url test-server test-index "_flush")})
+                      @(request {:method :post
+                                 :url (url test-server "_cache" "clear")})
                       (atest)))
 
 (deftest url-generation-test
@@ -29,7 +29,7 @@
   (is (= "http://127.0.0.1:9200/_all/b/c") (url test-server :_all "b" "c")))
 
 (deftest add-doc-test
-  (let [response (add-doc test-server test-index test-type test-doc)]
+  (let [response @(add-doc test-server test-index test-type test-doc)]
     (is (= 201 (:status response)))))
 
 (deftest get-doc-test
@@ -39,53 +39,37 @@
            test-doc
            :id 1)
   (Thread/sleep 1000)
-  (let [response (get-doc test-server test-index test-type 1)]
+  (let [response @(get-doc test-server test-index test-type 1)]
     (is (= 200 (:status response)))))
 
 (deftest delete-test
-  (let [doc (add-doc test-server
-                     test-index
-                     test-type
-                     test-doc
-                     :id 3)]
-    (is (=  200 (:status (delete-doc test-server test-index test-type 3))))))
+  (let [doc @(add-doc test-server
+                      test-index
+                      test-type
+                      test-doc
+                      :id 3)]
+    (is (=  200 (:status @(delete-doc test-server test-index test-type 3))))))
 
 (deftest search-doc-test
   (dotimes [i 3]
-    (add-doc test-server
-             test-index
-             test-type
-             test-doc))
+    @(add-doc test-server
+              test-index
+              test-type
+              test-doc))
   (Thread/sleep 1000)
-  (let [response (search-doc test-server
-                             {:query {:term {:title "foo"}}}
-                             :index :_all)]
+  (let [response @(search-doc test-server
+                              {:query {:term {:title "foo"}}}
+                              :index :_all)]
     (is (= 200 (:status response)))
     (is (= 3 (-> response :body :hits :hits count)))))
 
-(deftest search-async-test
-  (add-doc test-server
-           test-index
-           test-type
-           test-doc)
-  (Thread/sleep 1000)
-  (let [response
-        (wait-for-result (search-doc test-server
-                                     {:query {:term {:content "lorem"}}}
-                                     :index test-index
-                                     :type test-type
-                                     :async true))]
-    (is (= 200 (:status response)))
-    (is (= 1 (-> response :body :hits :hits count)))))
-
 (deftest percolate-test
-  (is (= 200 (:status (percolate test-server
-                                 test-index
-                                 "perc-test"
-                                 {:query {:term {:field1 "value1" }}})))))
+  (is (= 200 (:status @(percolate test-server
+                                  test-index
+                                  "perc-test"
+                                  {:query {:term {:field1 "value1" }}})))))
 
 (deftest bulk-test
-  (is (= 200 (:status (bulk test-server
-                            [{:index {:_index "test-index" :_type "test-type" :_id "foo"}}
-                             {:foo "bar" :lorem "ipsum"}])))))
-
+  (is (= 200 (:status @(bulk test-server
+                             [{:index {:_index "test-index" :_type "test-type" :_id "foo"}}
+                              {:foo "bar" :lorem "ipsum"}])))))

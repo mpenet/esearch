@@ -1,96 +1,85 @@
 (ns clj-esearch.core
   "Elastic-search HTTP client"
-  (:use [aleph.http :only [sync-http-request http-request]])
-  (:require [cheshire.core :as json]))
-
-(defn str-join [value separator]
-  (apply str (interpose separator value)))
+  (:require [aleph.http :as aleph-h]
+            [cheshire.core :as json]
+            [clojure.string :as clj-str]))
 
 (defn url
   "Build urls by joining params with /
    Treats vector args as multi params separated by ,"
   [& parts]
-  (str-join (->> parts
-                 (remove nil?)
-                 (map #(cond (sequential? %)
-                             (str-join % ",")
-                             (keyword? %)
-                             (name %)
-                             :else %)))
-            "/"))
-
-(defn query
-  [params]
-  (merge
-   {:headers {"content-type" "application/json"}
-    :keep-alive false
-    :auto-transform true}
-   params))
+  (->> parts
+       (filter identity)
+       (map #(cond (sequential? %)
+                   (clj-str/join "," %)
+                   (keyword? %)
+                   (name %)
+                   :else %))
+       (clj-str/join "/")))
 
 (defn request
-  "Forwards the ring requests settings to the appropriate request client"
-  [params async]
-  (let [query-params (query params)]
-    (if async
-      (http-request query-params)
-      (sync-http-request query-params))))
+  [request-params]
+  (aleph-h/http-request
+   (merge
+    {:headers {"content-type" "application/json"}
+     :keep-alive false
+     :auto-transform true}
+    request-params)))
 
 (defn add-doc
-  [server index type doc & {:keys [id query-params async]}]
+  [server index type doc & {:keys [id query-params]}]
   (request {:method :post
             :url (url server index type id)
-            :query-params query-params
-            :body (json/generate-string doc)}
-           async))
+            :body (json/generate-string doc)}))
 
 (defn get-doc
-  [server index type id & {:keys [query-params async]}]
+  [server index type id & {:keys [query-params]}]
   (request {:method :get
-            :url (url server index type id)
-            :query-params query-params}
-           async))
+            :url (url server index type id)}))
+
+(defn update-doc
+  [server query & {:keys [index type query-params]}]
+  (request {:method :delete
+            :url (url server index type "_update")
+            :query-params query-params
+            :body (json/generate-string query)}))
 
 (defn delete-doc
-  [server index type id & {:keys [query-params async]}]
+  [server index type id & {:keys [query-params]}]
   (request {:method :delete
             :url (url server index type id)
-            :query-params query-params}
-           async))
+            :query-params query-params}))
 
 (defn delete-by-query
-  [server delete-query & {:keys [index type query-params async]}]
+  [server query & {:keys [index type query-params]}]
   (request {:method :delete
             :url (url server index type "_query")
             :query-params query-params
-            :body (json/generate-string delete-query)}
-           async))
+            :body (json/generate-string query)}))
 
 (defn search-doc
-  [server search-query & {:keys [index type query-params async]}]
+  [server search-query & {:keys [index type query-params]}]
   (request {:method :get
             :url (url server index type  "_search")
             :query-params query-params
-            :body (json/generate-string search-query)}
-           async))
+            :body (json/generate-string search-query)}))
 
 (defn percolate
-  [server index name percolator-query & {:keys [query-params async]}]
+  [server index name query & {:keys [query-params]}]
   (request {:method :put
             :url (url server "_percolator" index name)
             :query-params query-params
-            :body (json/generate-string percolator-query)}
-           async))
+            :body (json/generate-string query)}))
 
 (defn count-docs
-  [server count-query & {:keys [index type query-params async]}]
+  [server query & {:keys [index type query-params]}]
   (request {:method :get
             :url (url server index type  "_count")
             :query-params query-params
-            :body (json/generate-string count-query)}
-           async))
+            :body (json/generate-string query)}))
 
 (defn bulk
-  [server bulk-lines & {:keys [query-params async]}]
+  [server bulk-lines & {:keys [query-params]}]
   (request {:method :put
             :url (url server "_bulk")
             :query-params query-params
@@ -98,5 +87,4 @@
             :headers {"content-type" "text/plain"}
             :body (->> bulk-lines
                        (map #(str (json/generate-string %) "\n"))
-                       (apply str))}
-           async))
+                       (apply str))}))

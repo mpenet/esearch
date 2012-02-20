@@ -4,17 +4,27 @@
             [cheshire.core :as json]
             [clojure.string :as clj-str]))
 
+(defprotocol URLBuilder
+  (encode [value]))
+
+(extend-protocol URLBuilder
+
+  clojure.lang.Sequential
+  (encode [value]
+    (clj-str/join "," (map encode value)))
+
+  clojure.lang.Keyword
+  (encode [value]
+    (name value))
+
+  Object
+  (encode [value] value))
+
 (defn url
-  "Build urls by joining params with /
-   Treats vector args as multi params separated by ,"
   [& parts]
   (->> parts
        (filter identity)
-       (map #(cond (sequential? %)
-                   (clj-str/join "," %)
-                   (keyword? %)
-                   (name %)
-                   :else %))
+       (map encode)
        (clj-str/join "/")))
 
 (defn request
@@ -35,7 +45,15 @@
 (defn get-doc
   [server index type id & {:keys [query-params]}]
   (request {:method :get
+            :query-params query-params
             :url (url server index type id)}))
+
+(defn mget-doc
+  [server query & {:keys [index type query-params]}]
+  (request {:method :get
+            :query-params query-params
+            :url (url server index type "_mget")
+            :body (json/generate-string query)}))
 
 (defn update-doc
   [server query & {:keys [index type query-params]}]
@@ -60,7 +78,7 @@
 (defn search-doc
   [server search-query & {:keys [index type query-params]}]
   (request {:method :get
-            :url (url server index type  "_search")
+            :url (url server index type "_search")
             :query-params query-params
             :body (json/generate-string search-query)}))
 

@@ -5,8 +5,9 @@ Clojure REST client for [Elastic Search](http://www.elasticsearch.org/)
 Uses [Aleph](https://github.com/ztellman/aleph) HTTP client under the hood.
 
 The query map corresponds to the JSON query DSL, allowing you to
-leverage the full features of elastic search
-[Elastic Search Query DSL ref](http://www.elasticsearch.org/guide/reference/query-dsl/)
+leverage the full features of elastic search.
+
+[Elastic Search Query reference](http://www.elasticsearch.org/guide/reference/query-dsl/)
 
 ## Usage
 
@@ -23,8 +24,8 @@ leverage the full features of elastic search
 
 
 (add-doc "http://127.0.0.1:9200"
-         "tweets"
-         "tweet"
+         :tweets ;; index and types can be keywords, strings, numbers and sequences
+         :tweet
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
          :id 1) ;; specified id
 
@@ -33,7 +34,7 @@ leverage the full features of elastic search
 
 @(add-doc ...)
 
-;; Error handling can be done using lamina utilities (same is true for timeouts)
+;; Error handling can be done using lamina utilities
 
 (lamina.core/run-pipeline
   (add-doc "http://127.0.0.1:9200"
@@ -44,6 +45,29 @@ leverage the full features of elastic search
   #(when (> (:status %) 201) (throw (Exception. "Not good"))))
 
 ```
+
+### Supported operations
+
+`add-doc `get-doc `mget-doc `update-doc delete-doc `delete-by-query
+`search-doc `percolate `count-docs `bulk
+
+### Connections
+
+Since we are making the request through HTTP there is not connection
+kept with the server and I am not very fond of bindings for this, imho
+partial, comp & co fill this need just fine.
+
+
+```clojure
+
+(def search (partial es/search-doc "http://example.com:9200"))
+(def get-item (partial es/get-doc "http://example.com:9200" :items))
+
+(get-item 12)
+
+```
+
+
 
 See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/test/core.clj) for more details.
 

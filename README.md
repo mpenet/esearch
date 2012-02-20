@@ -15,7 +15,7 @@ leverage the full features of elastic search.
 ```clojure
 (use 'clj-esearch.core)
 
-;; returns a Lamina result channel
+;; All ueries are asyncronous bu default, they return a Lamina result channel
 
 (add-doc "http://127.0.0.1:9200"
          "tweets"
@@ -29,12 +29,12 @@ leverage the full features of elastic search.
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
          :id 1) ;; specified id
 
-
-;; If you need the query to block/wait for the response dereference it
+;; If you need the query to block/wait for the response you can
+;; dereference it, use an on-success callback or a lamina pipeline
 
 @(add-doc ...)
 
-;; Error handling can be done using lamina utilities
+;; Error handling  can be done using lamina utilities
 
 (lamina.core/run-pipeline
   (add-doc "http://127.0.0.1:9200"
@@ -48,8 +48,8 @@ leverage the full features of elastic search.
 
 ### Supported operations
 
-`add-doc `get-doc `mget-doc `update-doc delete-doc `delete-by-query
-`search-doc `percolate `count-docs `bulk
+`add-doc` `get-doc` `mget-doc` `update-doc` delete-doc` `delete-by-query`
+`search-doc` `percolate` `count-docs` `bulk`
 
 ### Connections
 

@@ -27,7 +27,7 @@ leverage the full features of elastic search.
          :tweets ;; index and types can be keywords, strings, numbers and sequences
          :tweet
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
-         :id 1) ;; specified id
+         :id 1) ;; optional id
 ```
 
 If you need the query to block/wait for the response you can

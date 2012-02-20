@@ -28,10 +28,13 @@ leverage the full features of elastic search.
          :tweet
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
          :id 1) ;; specified id
+```
 
-;; If you need the query to block/wait for the response you can
-;; dereference it, use an on-success callback or a lamina pipeline
+If you need the query to block/wait for the response you can
+dereference it, use an on-success callback, a lamina pipeline or the async macro
+see: [Lamina Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels).
 
+```clojure
 @(add-doc ...)
 
 ;; Error handling  can be done using lamina utilities
@@ -48,7 +51,7 @@ leverage the full features of elastic search.
 
 ### Supported operations
 
-`add-doc` `get-doc` `mget-doc` `update-doc` delete-doc` `delete-by-query`
+`add-doc` `get-doc` `mget-doc` `update-doc` `delete-doc` `delete-by-query`
 `search-doc` `percolate` `count-docs` `bulk`
 
 ### Connections

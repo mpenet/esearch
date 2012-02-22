@@ -64,7 +64,7 @@ partial, comp & co fill this need just fine.
 ```clojure
 
 (def search (partial es/search-doc "http://example.com:9200"))
-(def get-item (partial es/get-doc "http://example.com:9200" :items))
+(def get-item (partial es/get-doc "http://example.com:9200" :items :item))
 
 (get-item 12)
 

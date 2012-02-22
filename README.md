@@ -15,7 +15,7 @@ leverage the full features of elastic search.
 ```clojure
 (use 'clj-esearch.core)
 
-;; All queries are asyncronous by default, they return a Lamina result channel
+;; All queries are asynchronous by default, they return a Lamina result channel
 
 (add-doc "http://127.0.0.1:9200"
          "tweets"

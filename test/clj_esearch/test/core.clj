@@ -63,12 +63,12 @@
     (is (= 3 (-> response :body :hits :hits count)))))
 
 (deftest percolate-test
-  (is (= 200 (:status @(percolate test-server
+  (is (>= 201 (:status @(percolate test-server
                                   test-index
                                   "perc-test"
                                   {:query {:term {:field1 "value1" }}})))))
 
 (deftest bulk-test
-  (is (= 200 (:status @(bulk test-server
-                             [{:index {:_index "test-index" :_type "test-type" :_id "foo"}}
-                              {:foo "bar" :lorem "ipsum"}])))))
+  (is (>= 201 (:status @(bulk test-server
+                                [{:index {:_index "test-index" :_type "test-type" :_id "foo"}}
+                                 {:foo "bar" :lorem "ipsum"}])))))

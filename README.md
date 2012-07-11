@@ -1,4 +1,4 @@
-# clj-esearch
+# clj-esearch [![Build Status](https://secure.travis-ci.org/mpenet/clj-esearch.png?branch=master)](http://travis-ci.org/mpenet/clj-esearch)
 
 Clojure REST client for [Elastic Search](http://www.elasticsearch.org/)
 

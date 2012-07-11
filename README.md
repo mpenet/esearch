@@ -71,7 +71,6 @@ partial, comp & co fill this need just fine.
 ```
 
 
-
 See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/test/core.clj) for more details.
 
 [Lamina](https://github.com/ztellman/lamina) [Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels)

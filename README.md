@@ -82,7 +82,7 @@ See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/t
 clj-esearch is available as a Maven artifact from [Clojars](http://clojars.org/clj-esearch):
 
     :dependencies
-      [[cc.qbits/clj-esearch "0.5.3"] ...]
+      [[cc.qbits/clj-esearch "0.5.5"] ...]
 
 ## License
 

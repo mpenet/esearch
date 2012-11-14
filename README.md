@@ -1,4 +1,4 @@
-# clj-esearch [![Build Status](https://secure.travis-ci.org/mpenet/clj-esearch.png?branch=master)](http://travis-ci.org/mpenet/clj-esearch)
+# esearch [![Build Status](https://secure.travis-ci.org/mpenet/esearch.png?branch=master)](http://travis-ci.org/mpenet/esearch)
 
 Clojure REST client for [Elastic Search](http://www.elasticsearch.org/)
 
@@ -13,7 +13,7 @@ leverage the full features of elastic search.
 
 
 ```clojure
-(use 'clj-esearch.core)
+(use 'qbits.esearch.core)
 
 ;; All queries are asynchronous by default, they return a Lamina result channel
 
@@ -71,7 +71,7 @@ partial, comp & co fill this need just fine.
 ```
 
 
-See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/test/core.clj) for more details.
+See [tests](https://github.com/mpenet/esearch/blob/master/test/qbits/esearch/test/core.clj) for more details.
 
 [Lamina](https://github.com/ztellman/lamina) [Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels)
 [Aleph](https://github.com/ztellman/aleph)
@@ -79,10 +79,10 @@ See [tests](https://github.com/mpenet/clj-esearch/blob/master/test/clj_esearch/t
 
 ## Installation
 
-clj-esearch is available as a Maven artifact from [Clojars](http://clojars.org/clj-esearch):
+esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
 
     :dependencies
-      [[cc.qbits/clj-esearch "0.5.5"] ...]
+      [[cc.qbits/esearch "0.6.0"] ...]
 
 ## License
 

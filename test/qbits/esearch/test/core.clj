@@ -1,5 +1,5 @@
-(ns clj-esearch.test.core
-  (:use [clj-esearch.core]
+(ns qbits.esearch.test.core
+  (:use [qbits.clj-esearch.core]
         [lamina.core :only [wait-for-result]]
         [clojure.test]))
 

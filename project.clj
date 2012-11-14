@@ -1,4 +1,4 @@
-(defproject cc.qbits/clj-esearch "0.5.5"
+(defproject cc.qbits/esearch "0.6.0"
   :description "Elastic Search REST client for Clojure"
   :url "https://github.com/mpenet/clj-esearch"
   :license {:name "Eclipse Public License"

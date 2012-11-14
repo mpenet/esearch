@@ -1,4 +1,4 @@
-(ns clj-esearch.core
+(ns qbits.esearch.core
   "Elastic-search HTTP client"
   (:require [aleph.http :as aleph-h]
             [cheshire.core :as json]

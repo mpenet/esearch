@@ -9,6 +9,13 @@ leverage the full features of elastic search.
 
 [Elastic Search Query reference](http://www.elasticsearch.org/guide/reference/query-dsl/)
 
+## Installation
+
+esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
+
+    :dependencies
+      [[cc.qbits/esearch "0.6.1"] ...]
+
 ## Usage
 
 
@@ -76,13 +83,6 @@ See [tests](https://github.com/mpenet/esearch/blob/master/test/qbits/esearch/tes
 [Lamina](https://github.com/ztellman/lamina) [Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels)
 [Aleph](https://github.com/ztellman/aleph)
 
-
-## Installation
-
-esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
-
-    :dependencies
-      [[cc.qbits/esearch "0.6.1"] ...]
 
 ## License
 

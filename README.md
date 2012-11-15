@@ -82,7 +82,7 @@ See [tests](https://github.com/mpenet/esearch/blob/master/test/qbits/esearch/tes
 esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
 
     :dependencies
-      [[cc.qbits/esearch "0.6.0"] ...]
+      [[cc.qbits/esearch "0.6.1"] ...]
 
 ## License
 

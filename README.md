@@ -13,7 +13,7 @@ leverage the full features of elastic search.
 
 
 ```clojure
-(use 'qbits.esearch.core)
+(use 'qbits.esearch)
 
 ;; All queries are asynchronous by default, they return a Lamina result channel
 

@@ -1,5 +1,6 @@
 (ns qbits.esearch.test.core
-  (:use [qbits.esearch.core]
+  (:use [qbits.esearch]
+        [qbits.esearch.utils :as utils]
         [lamina.core :only [wait-for-result]]
         [clojure.test]))
 
@@ -11,11 +12,11 @@
 (def test-doc (Doc. "foo" 12345 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
 
 (use-fixtures :each (fn [atest]
-                      @(request {:method :delete
+                      @(utils/request {:method :delete
                                  :url (url test-server test-index test-type)})
-                      @(request {:method :post
+                      @(utils/request {:method :post
                                  :url (url test-server test-index "_flush")})
-                      @(request {:method :post
+                      @(utils/request {:method :post
                                  :url (url test-server "_cache" "clear")})
                       (atest)))
 

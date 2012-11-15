@@ -1,1 +1,0 @@
-([:dependencies [[org.clojure/clojure "1.4.0"] [cheshire "4.0.4"] [aleph "0.3.0-beta7"]]])

@@ -2,8 +2,6 @@
 
 Clojure REST client for [Elastic Search](http://www.elasticsearch.org/)
 
-Uses [Aleph](https://github.com/ztellman/aleph) HTTP client under the hood.
-
 The query map corresponds to the JSON query DSL, allowing you to
 leverage the full features of elastic search.
 

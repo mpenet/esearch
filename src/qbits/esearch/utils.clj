@@ -1,7 +1,9 @@
 (ns qbits.esearch.utils
   (:require
    [clojure.string :as string]
-   [aleph.http :as aleph]))
+   [clojure.core.async :as async]
+   [cheshire.core :as json]
+   [org.httpkit.client :as http]))
 
 (defprotocol URLBuilder
   (encode [value]))
@@ -28,9 +30,15 @@
 
 (defn request
   [request-params]
-  (aleph/http-request
-   (merge
-    {:headers {"content-type" "application/json"}
-     :keep-alive false
-     :auto-transform true}
-    request-params)))
+  (let [ch (async/chan)]
+    (http/request
+     (merge
+      {:headers {"content-type" "application/json"}
+       :keep-alive -1}
+      request-params)
+     (fn [{:keys [status headers body error opts]
+           :as response}]
+       (when-not error
+         (async/put! ch (update-in response [:body] #(json/parse-string % true))))
+       (async/close! ch)))
+    ch))

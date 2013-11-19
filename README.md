@@ -14,7 +14,7 @@ leverage the full features of elastic search.
 esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
 
     :dependencies
-      [[cc.qbits/esearch "0.6.1"] ...]
+      [[cc.qbits/esearch "0.7.0"] ...]
 
 ## Usage
 
@@ -22,7 +22,8 @@ esearch is available as a Maven artifact from [Clojars](http://clojars.org/esear
 ```clojure
 (use 'qbits.esearch)
 
-;; All queries are asynchronous by default, they return a Lamina result channel
+;; All queries are asynchronous by default, they return a
+   clojure.core.async channel
 
 (add-doc "http://127.0.0.1:9200"
          "tweets"
@@ -35,25 +36,6 @@ esearch is available as a Maven artifact from [Clojars](http://clojars.org/esear
          :tweet
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
          :id 1) ;; optional id
-```
-
-If you need the query to block/wait for the response you can
-dereference it, use an on-success callback, a lamina pipeline or the async macro
-see: [Lamina Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels).
-
-```clojure
-@(add-doc ...)
-
-;; Error handling  can be done using lamina utilities
-
-(lamina.core/run-pipeline
-  (add-doc "http://127.0.0.1:9200"
-           "tweets"
-           "tweet"
-           {:text "foo bar" :author {:name "john"} :posted 123450000000})
-  :error-handler (fn [e] ...)
-  #(when (> (:status %) 201) (throw (Exception. "Not good"))))
-
 ```
 
 ### Supported operations
@@ -77,12 +59,7 @@ partial, comp & co fill this need just fine.
 
 ```
 
-
 See [tests](https://github.com/mpenet/esearch/blob/master/test/qbits/esearch/test/core.clj) for more details.
-
-[Lamina](https://github.com/ztellman/lamina) [Result Channel](https://github.com/ztellman/lamina/wiki/Result-Channels)
-[Aleph](https://github.com/ztellman/aleph)
-
 
 ## License
 

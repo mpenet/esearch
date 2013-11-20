@@ -38,7 +38,6 @@
       request-params)
      (fn [{:keys [status headers body error opts]
            :as response}]
-       (when-not error
-         (async/put! ch (update-in response [:body] #(json/parse-string % true))))
+       (async/put! ch (update-in response [:body] #(json/parse-string % true)))
        (async/close! ch)))
     ch))

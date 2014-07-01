@@ -6,4 +6,4 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/core.async "0.1.303.0-886421-alpha"]
                  [http-kit "2.1.16"]
-                 [cheshire "5.2.0"]])
+                 [cheshire "5.3.1"]])

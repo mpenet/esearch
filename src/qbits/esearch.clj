@@ -53,7 +53,7 @@
 (defn percolate
   [server index name query & {:keys [query-params]}]
   (utils/request {:method :put
-                  :url (utils/url server "_percolator" index name)
+                  :url (utils/url server ".percolator" index name)
                   :query-params query-params
                   :body (json/generate-string query)}))
 

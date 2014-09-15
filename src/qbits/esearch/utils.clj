@@ -33,7 +33,7 @@
   (let [ch (async/chan)]
     (http/request
      (merge
-      {:headers {"content-type" "application/json"}
+      {:headers {"content-type" "application/json; charset=UTF-8"}
        :keep-alive -1}
       request-params)
      (fn [{:keys [status headers body error opts]

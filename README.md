@@ -12,7 +12,7 @@ leverage the full features of elastic search.
 esearch is available as a Maven artifact from [Clojars](http://clojars.org/esearch):
 
     :dependencies
-      [[cc.qbits/esearch "0.7.0"] ...]
+      [[cc.qbits/esearch "0.7.2"] ...]
 
 ## Usage
 

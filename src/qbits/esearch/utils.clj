@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [clojure.core.async :as async]
    [cheshire.core :as json]
-   [org.httpkit.client :as http]))
+   [qbits.jet.client.http :as http]))
 
 (defprotocol URLBuilder
   (encode [value]))
@@ -28,16 +28,14 @@
        (map encode)
        (string/join "/")))
 
+(defonce client
+  (delay
+   (http/client {:request-buffer-size (* 4096 1024)
+                                     :response-buffer-size (* 4096 1024)})))
+
 (defn request
   [request-params]
-  (let [ch (async/chan)]
-    (http/request
-     (merge
-      {:headers {"content-type" "application/json; charset=UTF-8"}
-       :keep-alive -1}
-      request-params)
-     (fn [{:keys [status headers body error opts]
-           :as response}]
-       (async/put! ch (update-in response [:body] #(json/parse-string % true)))
-       (async/close! ch)))
-    ch))
+  (http/request @client
+                (merge {:headers {"Content-Type" "application/json; charset=UTF-8"}
+                        :as :json}
+                       request-params)))

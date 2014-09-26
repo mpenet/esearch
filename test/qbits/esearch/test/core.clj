@@ -61,7 +61,7 @@
                                   {:query {:term {:title "foo"}}}
                                   :index test-index))]
     (is (= 200 (:status response)))
-    (is (= 3 (-> response :body :hits :hits count)))))
+    (is (= 3 (-> response :body <!! :hits :hits count)))))
 
 (deftest percolate-test
   (is (>= 201 (:status (<!! (percolate test-server

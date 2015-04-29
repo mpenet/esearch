@@ -28,16 +28,9 @@
        (map encode)
        (string/join "/")))
 
-(defonce client
-  (delay
-   (http/client {:request-buffer-size (* 4096 1024)
-                 :response-buffer-size (* 4096 1024)})))
-
 (defn request
-
-  [request-params]
-  (http/request @client
+  [client request-params]
+  (http/request client
                 (merge {:headers {"Content-Type" "application/json; charset=UTF-8"}
-                        :as :json
-                        :fold-chunked-response? true}
+                        :as :json}
                        request-params)))

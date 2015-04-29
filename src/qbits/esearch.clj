@@ -58,7 +58,7 @@
                   :body (json/generate-string search-query)}))
 
 (defn percolate
-  [server index name query & {:keys [query-params]}]
+  [client server index name query & {:keys [query-params]}]
   (utils/request client
                  {:method :put
                   :url (utils/url server ".percolator" index name)

@@ -19,17 +19,22 @@ esearch is available as a Maven artifact from [Clojars](http://clojars.org/esear
 
 ```clojure
 (use 'qbits.esearch)
+(use 'qbits.jet.client.http)
 
 ;; All queries are asynchronous by default, they return a
    clojure.core.async channel
 
-(add-doc "http://127.0.0.1:9200"
+(def client (qbits.jet.client.http/client))
+
+(add-doc client
+         "http://127.0.0.1:9200"
          "tweets"
          "tweet"
          {:text "foo bar" :author {:name "john"} :posted 123450000000})
 
 
-(add-doc "http://127.0.0.1:9200"
+(add-doc client
+         "http://127.0.0.1:9200"
          :tweets ;; index and types can be keywords, strings, numbers and sequences
          :tweet
          {:text "foo bar" :author {:name "john"} :posted 123450000000}
@@ -50,8 +55,8 @@ partial, comp & co fill this need just fine.
 
 ```clojure
 
-(def search (partial es/search-doc "http://example.com:9200"))
-(def get-item (partial es/get-doc "http://example.com:9200" :items :item))
+(def search (partial es/search-doc client "http://example.com:9200"))
+(def get-item (partial es/get-doc clietn "http://example.com:9200" :items :item))
 
 (get-item 12)
 

@@ -1,5 +1,8 @@
 language: clojure
 
+jdk:
+  - oraclejdk8
+
 before_install:
   - sudo service elasticsearch start
   - sleep 3
